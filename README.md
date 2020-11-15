@@ -18,7 +18,14 @@ $w.onReady(function () {
 });
 ```
  
-3. In DevMode edit the elementId and include "HideOnMobile" or "ShowOnMobile" in the id eg: test1ShowOnMobile, text2HideOnMobile.
+3. In DevMode edit the elementId and include "DesktopContent", "TabletContent" or "MobileContent" in the id 
+
+eg:
+html1DesktopContentTableContent (will show on Desktop and Tablet)
+html2MobileContentTableContent (will show on Desktop and Tablet)
+
 
 Here is a quick video that deomonstrates setting up on your own website (dont forget to thumns up if you appreciate my help):
+(coming soon)
 
+Blog post here: (coming soon)
