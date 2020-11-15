@@ -21,8 +21,8 @@ $w.onReady(function () {
 3. In DevMode edit the elementId and include "DesktopContent", "TabletContent" or "MobileContent" in the id 
 
 eg:
-html1DesktopContentTableContent (will show on Desktop and Tablet)
-html2MobileContentTableContent (will show on Desktop and Tablet)
+html1DesktopContentTabletContent (will show on Desktop and Tablet)
+html2MobileContent (will show on Mobile)
 
 
 Here is a quick video that deomonstrates setting up on your own website (dont forget to thumns up if you appreciate my help):
