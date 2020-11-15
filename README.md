@@ -6,7 +6,7 @@ Supports Object Types of: Text, Strip and Html
  
 ## Usage:
  
-1. Add the javascript file switchVisibility.js to the Wix site code files: CODE FILES / Public
+1. Add the javascript file wixElementVisibilitySwitcher.js to the Wix site code files: CODE FILES / Public
 
 2. Add the following code to the masterPage.js file (to work on all pages) or on the relevant page javascript file
 
