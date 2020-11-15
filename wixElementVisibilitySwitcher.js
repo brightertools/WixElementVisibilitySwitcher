@@ -17,7 +17,8 @@
 //    switchElementVisibility();
 // });
 // 
-// 3) In DevMode edit the elementId and include "HideOnMobile" or "ShowOnMobile" in the id eg: test1ShowOnMobile, text2HideOnMobile.
+// 3) In DevMode include "DesktopContent", "TabletContent" or "MobileContent" in the element id
+// eg: html1DesktopContentTableContent (will show on Desktop and Tablet) html2MobileContentTableContent (will show on Desktop and Tablet)
 //
 // Created by Brighter Tools Ltd - www.brightertools.com
 // Latest version at: https://github.com/brightertools/WixElementVisibilitySwitcher
