@@ -24,8 +24,4 @@ eg:
 html1DesktopContentTabletContent (will show on Desktop and Tablet)
 html2MobileContent (will show on Mobile)
 
-
-Here is a quick video that deomonstrates setting up on your own website (dont forget to thumns up if you appreciate my help):
-(coming soon)
-
-Blog post here: (coming soon)
+Blog post here: https://www.brightertools.com/post/wix-show-hide-switch-element-visibility-across-mobile-desktop-eg-banner-ads
