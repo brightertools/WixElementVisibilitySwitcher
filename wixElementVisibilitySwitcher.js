@@ -3,7 +3,7 @@
 // 
 // Hide/Show Elemenets for Mobile / Non/Mobile views
 // 
-// Supports Object Types of: Text, Strip and Html
+// Supports Object Types of: Text, Image, Strip, StripColumn and Html with the Page, Header and Footer areas on web nd blog pages
 // 
 // Usage:
 // 
@@ -17,7 +17,13 @@
 //    switchElementVisibility();
 // });
 // 
-// 3) In DevMode edit the elementId and include "HideOnMobile" or "ShowOnMobile" in the id eg: test1ShowOnMobile, text2HideOnMobile.
+// 3) In DevMode edit the element id and include "DesktopContent", "TabletContent" or "MobileContent" in the id 
+//
+// Examples: 
+//
+// id = text1DesktopContent - Will be displayed for Desktop Only
+// id = html2DesktopContentTabletContent - Will be displayed for Desktop and Tablet views Only
+// id = strip3MobileContent - Will be displayed for Mobile views only
 //
 // Created by Brighter Tools Ltd - www.brightertools.com
 // Latest version at: https://github.com/brightertools/WixElementVisibilitySwitcher
@@ -122,7 +128,7 @@ function showHideElements(level, parentElement)
 		elementHidden = hideShowElement(parentElement);
 	}
 
-    if (elementHidden === false)
+    if (elementHidden === false && parentElement.children !== undefined)
     {
         parentElement.children.forEach(function(childElement) {
 
@@ -130,10 +136,7 @@ function showHideElements(level, parentElement)
 
             if (childElement.type === "$w.HtmlComponent" || childElement.type ===  "$w.Text" || childElement.type ===  "$w.Image")
 	        {
-		        if (hideShowElement(childElement))
-                {
-                    return;
-                }
+		        hideShowElement(childElement);
 	        }
 
             if (childElement.type === "$w.Page")
@@ -157,12 +160,6 @@ function showHideElements(level, parentElement)
             if (childElement.type === "$w.Footer")
             {
                 consoleLog("level " + level + " element / Header - " + childElement.id);
-                showHideElements(level + 1, childElement);
-            }
-
-            if (childElement.type === "$w.IFrame")
-            {
-                consoleLog("level " + level + " element / IFrame - " + childElement.id);
                 showHideElements(level + 1, childElement);
             }
 
