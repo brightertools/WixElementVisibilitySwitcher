@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------------------------------------------------------------
-// switchVisibility.js - Version 1.0.0
+// wixElementVisibilitySwitcher.js - Version 1.0.0
 // 
 // Hide/Show Elemenets for Mobile / Non/Mobile views
 // 
@@ -17,8 +17,7 @@
 //    switchElementVisibility();
 // });
 // 
-// 3) In DevMode include "DesktopContent", "TabletContent" or "MobileContent" in the element id
-// eg: html1DesktopContentTableContent (will show on Desktop and Tablet) html2MobileContentTableContent (will show on Desktop and Tablet)
+// 3) In DevMode edit the elementId and include "HideOnMobile" or "ShowOnMobile" in the id eg: test1ShowOnMobile, text2HideOnMobile.
 //
 // Created by Brighter Tools Ltd - www.brightertools.com
 // Latest version at: https://github.com/brightertools/WixElementVisibilitySwitcher
@@ -26,7 +25,10 @@
 
 import wixWindow from 'wix-window';
 
-const debug = true;
+// Set to true to output console debug messages
+const debugMode = false;
+
+// defaultSettings (currently used to set all defaults)
 const defaultSettings = {
 	showHideTextElement: true,
 	showHideStripElements: true,
@@ -36,180 +38,152 @@ const defaultSettings = {
 
 var settings = {};
 
+// Console log, enabled using debugMode
 function consoleLog(text)
 {
-	if (!debug)
+	if (!debugMode)
 	{
 		return;
 	}
 	console.log(text);
 }
 
-function switchDesktopMobileHtmlElements(htmlElement)
+// Shows/Hides element based on ID
+// Returns true if element is hidden we use this to prevent traversinhg hidden elements
+function hideShowElement(webElement)
 {
-	//$w("#" + htmlElement.id).hide();
-	consoleLog("Html Element: " + htmlElement.id);
+	consoleLog("Web Element: " + webElement.id);
+
+    var result = false;
 
 	var shown = false;
-
-	if (htmlElement.id.indexOf("MobileContent") >= 0) {
+	if (webElement.id.indexOf("MobileContent") >= 0) {
 
 		if (wixWindow.formFactor === "Mobile") {
-			$w("#" + htmlElement.id).show();
+			$w("#" + webElement.id).show();
+            $w("#" + webElement.id).expand();
 			shown = true;
-			consoleLog(htmlElement.id + " - shown");
+			consoleLog(webElement.id + " - shown");
 		}
 		else
 		{
-			$w("#" + htmlElement.id).hide();
-			consoleLog(htmlElement.id + " - hidden");
+			$w("#" + webElement.id).hide();
+            $w("#" + webElement.id).collapse();
+			consoleLog(webElement.id + " - hidden");
+            result = true;
 		}
 	}
-	if (htmlElement.id.indexOf("TabletContent") >= 0) {
+	if (webElement.id.indexOf("TabletContent") >= 0) {
 		if (wixWindow.formFactor === "Tablet") {
-			$w("#" + htmlElement.id).show();
-			consoleLog(htmlElement.id + " - shown");
+			$w("#" + webElement.id).show();
+            $w("#" + webElement.id).expand();
+			consoleLog(webElement.id + " - shown");
 		}
 		else
 		{
 			if (!shown)
 			{
-				$w("#" + htmlElement.id).hide();
-				consoleLog(htmlElement.id + " - hidden");
+				$w("#" + webElement.id).hide();
+                $w("#" + webElement.id).collapse();
+				consoleLog(webElement.id + " - hidden");
+                result = true;
 			}
 		}
 	}
-	if (htmlElement.id.indexOf("DesktopContent") >= 0) {
+	if (webElement.id.indexOf("DesktopContent") >= 0) {
 		if (wixWindow.formFactor === "Desktop") {
-			$w("#" + htmlElement.id).show();
-			consoleLog(htmlElement.id + " - shown");
+			$w("#" + webElement.id).show();
+            $w("#" + webElement.id).expand();
+			consoleLog(webElement.id + " - shown");
 		}
 		else
 		{
 			if (!shown)
 			{
-				$w("#" + htmlElement.id).hide();
-				consoleLog(htmlElement.id + " - hidden");
+				$w("#" + webElement.id).hide();
+                $w("#" + webElement.id).collapse();
+				consoleLog(webElement.id + " - hidden");
+                result = true;
 			}
 		}
 	}
+
+    return result;
 }
 
-
-function switchDesktopMobileHtmlFromStripAsRoot(stripElement)
+function showHideElements(level, parentElement)
 {
-	stripElement.children.forEach(function(c2)
+	consoleLog("showHideElements called: level " + level + " element - " + parentElement.type + " : " + parentElement.id);    
+
+    var elementHidden = false;
+
+    if (parentElement.type !== "$w.Page" && parentElement.type !== "$w.Header" && parentElement.type !== "$w.Footer" && (parentElement.type === "$w.ColumnStrip" || parentElement.type === "$w.Column" || parentElement.type === "$w.HtmlComponent" || parentElement.type ===  "$w.IFrame" || parentElement.type ===  "$w.Text" || parentElement.type ===  "$w.Image"))
 	{
-		if (c2.type === "$w.Column")
-		{
-			console.log("documentRoot/Page/Strip/Column : " + c2.id);
-			c2.children.forEach(function(c3)
-			{
-				//console.log(c3.type + " : " + c3.id + ", form factor = " + wixWindow.formFactor);
-				if (c3.type === "$w.HtmlComponent")
-				{
-					console.log("is html component");
-					switchDesktopMobileHtmlElements(c3);
-				}
+		elementHidden = hideShowElement(parentElement);
+	}
 
-				if (c2 !== undefined && c2.type === "$w.IFrame")
-				{
-					// On the blog page, the blog is contained within an IFrame, so this is the root element we will look into
-					switchDesktopMobileHtmlFromIFrameAsRoot(c2);
-				}
-			});
-		}
-	});
-}
+    if (elementHidden === false)
+    {
+        parentElement.children.forEach(function(childElement) {
 
-function switchDesktopMobileHtmlFromIFrameAsRoot(iFrameElement)
-{
-	iFrameElement.children.forEach(function(c2)
-	{
-		if (c2.type === "$w.Column")
-		{
-			c2.children.forEach(function(c3)
-			{
-				//console.log(c3.type + " : " + c3.id + ", form factor = " + wixWindow.formFactor);
-				if (c3.type === "$w.HtmlComponent")
-				{
-					console.log("is html component");
-					switchDesktopMobileHtmlElements(c3);
-				}
-			});
-		}
-	});
-}
+            consoleLog("Child Element: level " + level + " element - " + childElement.type + " : " + childElement.id);
 
-function switchDesktopMobileFromStripParentElement(rootElement)
-{
-	console.log("switchDesktopMobileElements called.");
-	//console.log(rootElement.type + " : " + rootElement.id);
-	
-	rootElement.children.forEach(function(c){
-		
-		console.log("Parent Element = " + rootElement.id + ", Child Element = " + c.type + " : " + c.id);
-		
-		if (c.type === "$w.ColumnStrip")
-		{
-			console.log("documentRoot/Page/Strip : " + c.id);
-			switchDesktopMobileHtmlFromStripAsRoot(c);
-		}
+            if (childElement.type === "$w.HtmlComponent" || childElement.type ===  "$w.Text" || childElement.type ===  "$w.Image")
+	        {
+		        if (hideShowElement(childElement))
+                {
+                    return;
+                }
+	        }
 
-		if (c.type === "$w.Page")
-		{
-			console.log("documentRoot/Strip/Page : " + c.id);
-			// Switch Desktop/Mobile for all element on Page
-			switchDesktopMobileFromStripParentElement(c);
-		}
+            if (childElement.type === "$w.Page")
+            {
+                consoleLog("level " + level + " element / Page - " + childElement.id);
+                showHideElements(level + 1, childElement);
+            }
 
-		if (c.type === "$w.HtmlComponent")
-		{
-			console.log("is html component (" + c.id + ")");
-			switchDesktopMobileHtmlElements(c);
-		}
+            if (childElement.type === "$w.Header")
+            {
+                consoleLog("level " + level + " element / Header - " + childElement.id);
+                showHideElements(level + 1, childElement);
+            }
 
-		//if (c.type === "$w.IFrame")
-		//{
-		//	console.log("documentRoot/Strip/Iframe : " + c.id, + ", children length =" + c.children.length);
-			// On the blog page, the blog is contained within an IFrame, so this is the root element we will look into
-			//switchDesktopMobileHtmlFromIFrameAsRoot(c);
-		//}
-	});
-}
+            if (childElement.type === "$w.Footer")
+            {
+                consoleLog("level " + level + " element / Footer - " + childElement.id);
+                showHideElements(level + 1, childElement);
+            }
 
-function switchRootElements()
-{
-	consoleLog("root elements");
+            if (childElement.type === "$w.Footer")
+            {
+                consoleLog("level " + level + " element / Header - " + childElement.id);
+                showHideElements(level + 1, childElement);
+            }
 
-	$w("Document").children.forEach(function(childElement){
-		console.log("documentRoot-" + childElement.type + " : " + childElement.id);
+            if (childElement.type === "$w.IFrame")
+            {
+                consoleLog("level " + level + " element / IFrame - " + childElement.id);
+                showHideElements(level + 1, childElement);
+            }
 
-		if (childElement.type === "$w.Page")
-		{
-			console.log("documentRoot/Page : " + childElement.id);
-			// Switch Desktop/Mobile for all element on Page
-			switchDesktopMobileFromStripParentElement(childElement);
-		}
+            if (childElement.type === "$w.ColumnStrip")
+            {
+                consoleLog("level " + level + " element / ColumnStrip - " + childElement.id);
+                showHideElements(level + 1, childElement);
+            }
 
-		console.log("other documentRoot Elements...");
+            if (childElement.type === "$w.Column")
+            {
+                consoleLog("level " + level + " element / Column - " + childElement.id);
+                showHideElements(level + 1, childElement);
+            }
 
-		if (childElement.type === "$w.IFrame")
-		{
-			console.log("documentRoot/Iframe : " + childElement.id);
-			// On the blog page, the blog is contained within an IFrame, so this is the root element we will look into
-			switchDesktopMobileHtmlFromIFrameAsRoot(childElement);
-		}
-
-		if (childElement.type === "$w.HtmlComponent")
-		{
-			console.log("is html component");
-			switchDesktopMobileHtmlElements(childElement);
-		}
-	});	
+        });
+    }
 }
 
 export function switchElementVisibility(config) {
+
 	consoleLog("switchElementVisibility called");
 	if (config !== undefined)
 	{
@@ -219,6 +193,8 @@ export function switchElementVisibility(config) {
 	{
 		settings = defaultSettings;
 	}
-	switchRootElements();
-	return true;
+
+    $w("Document").children.forEach(function(childElement) {
+        showHideElements(1, childElement);
+    });
 }
