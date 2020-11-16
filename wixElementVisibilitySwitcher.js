@@ -32,7 +32,7 @@
 import wixWindow from 'wix-window';
 
 // Set to true to output console debug messages
-const debugMode = false;
+const debugMode = true;
 
 // defaultSettings (currently used to set all defaults)
 const defaultSettings = {
@@ -63,27 +63,40 @@ function hideShowElement(webElement)
     var result = false;
 
 	var shown = false;
+	var hidden = false;
+
 	if (webElement.id.indexOf("MobileContent") >= 0) {
 
 		if (wixWindow.formFactor === "Mobile") {
-			$w("#" + webElement.id).show();
-            $w("#" + webElement.id).expand();
-			shown = true;
-			consoleLog(webElement.id + " - shown");
+			if (!hidden)
+			{
+				$w("#" + webElement.id).show();
+				$w("#" + webElement.id).expand();
+				shown = true;
+				consoleLog(webElement.id + " - shown");
+			}
 		}
 		else
 		{
-			$w("#" + webElement.id).hide();
-            $w("#" + webElement.id).collapse();
-			consoleLog(webElement.id + " - hidden");
-            result = true;
+			if (!shown)
+			{
+				$w("#" + webElement.id).hide();
+                $w("#" + webElement.id).collapse();
+				consoleLog(webElement.id + " - hidden");
+                result = true;
+			}
 		}
 	}
+
 	if (webElement.id.indexOf("TabletContent") >= 0) {
 		if (wixWindow.formFactor === "Tablet") {
-			$w("#" + webElement.id).show();
-            $w("#" + webElement.id).expand();
-			consoleLog(webElement.id + " - shown");
+			if (!hidden)
+			{
+				$w("#" + webElement.id).show();
+				$w("#" + webElement.id).expand();
+				shown = true;
+				consoleLog(webElement.id + " - shown");
+			}
 		}
 		else
 		{
@@ -98,9 +111,13 @@ function hideShowElement(webElement)
 	}
 	if (webElement.id.indexOf("DesktopContent") >= 0) {
 		if (wixWindow.formFactor === "Desktop") {
-			$w("#" + webElement.id).show();
-            $w("#" + webElement.id).expand();
-			consoleLog(webElement.id + " - shown");
+			if (!hidden)
+			{
+				$w("#" + webElement.id).show();
+				$w("#" + webElement.id).expand();
+				shown = true;
+				consoleLog(webElement.id + " - shown");
+			}
 		}
 		else
 		{
@@ -134,7 +151,7 @@ function showHideElements(level, parentElement)
 
             consoleLog("Child Element: level " + level + " element - " + childElement.type + " : " + childElement.id);
 
-            if (childElement.type === "$w.HtmlComponent" || childElement.type ===  "$w.Text" || childElement.type ===  "$w.Image")
+            if (childElement.type === "$w.HtmlComponent" || childElement.type ===  "$w.Text" || childElement.type ===  "$w.Image" || childElement.type ===  "$w.ColumnStrip" || childElement.type ===  "$w.Column")
 	        {
 		        hideShowElement(childElement);
 	        }
