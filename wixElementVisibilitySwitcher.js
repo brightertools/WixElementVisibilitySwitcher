@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------------------------------------------------------------
-// wixElementVisibilitySwitcher.js - Version 1.0.0
+// wixElementVisibilitySwitcher.js - Version 1.0.1
 // 
 // Hide/Show Elemenets for Mobile / Non/Mobile views
 // 
-// Supports Object Types of: Text, Image, Strip, StripColumn and Html with the Page, Header and Footer areas on web nd blog pages
+// Supports Object Types of: Text, Image, Strip, StripColumn and Html with the Page, Header and Footer areas on web and blog pages
 // 
 // Usage:
 // 
@@ -17,13 +17,18 @@
 //    switchElementVisibility();
 // });
 // 
-// 3) In DevMode edit the element id and include "DesktopContent", "TabletContent" or "MobileContent" in the id 
+// 3) In DevMode edit the element id and include "DesktopContent", "TabletContent" or "MobileContent" in the id  to show on the
+// relevant views (form factors) When hidden the vertical area will be collapsed by default, add NoCollapse to prevent collapsing.
+// (No Collapse is handy for not adjusting the view when simlar elements are stacked on top of each other in the editor)
 //
 // Examples: 
 //
 // id = text1DesktopContent - Will be displayed for Desktop Only
 // id = html2DesktopContentTabletContent - Will be displayed for Desktop and Tablet views Only
 // id = strip3MobileContent - Will be displayed for Mobile views only
+// id = html2DesktopContentTabletContentNoCollapse - Will be displayed for Desktop and Tablet views Only and will not collapse the
+//                                                   are on mobile views.
+//
 //
 // Created by Brighter Tools Ltd - www.brightertools.com
 // Latest version at: https://github.com/brightertools/WixElementVisibilitySwitcher
@@ -65,6 +70,13 @@ function hideShowElement(webElement)
 	var shown = false;
 	var hidden = false;
 
+    var collapse = true;
+
+    if (webElement.id.indexOf("NoCollapse") >= 0)
+    {
+        collapse = false;
+    }
+
 	if (webElement.id.indexOf("MobileContent") >= 0) {
 
 		if (wixWindow.formFactor === "Mobile") {
@@ -81,7 +93,10 @@ function hideShowElement(webElement)
 			if (!shown)
 			{
 				$w("#" + webElement.id).hide();
-                $w("#" + webElement.id).collapse();
+                if (collapse)
+                {
+                    $w("#" + webElement.id).collapse();
+                }
 				consoleLog(webElement.id + " - hidden");
                 result = true;
 			}
@@ -103,7 +118,10 @@ function hideShowElement(webElement)
 			if (!shown)
 			{
 				$w("#" + webElement.id).hide();
-                $w("#" + webElement.id).collapse();
+                if (collapse)
+                {
+                    $w("#" + webElement.id).collapse();
+                }
 				consoleLog(webElement.id + " - hidden");
                 result = true;
 			}
@@ -124,7 +142,10 @@ function hideShowElement(webElement)
 			if (!shown)
 			{
 				$w("#" + webElement.id).hide();
-                $w("#" + webElement.id).collapse();
+                if (collapse)
+                {
+                    $w("#" + webElement.id).collapse();
+                }
 				consoleLog(webElement.id + " - hidden");
                 result = true;
 			}
@@ -140,7 +161,7 @@ function showHideElements(level, parentElement)
 
     var elementHidden = false;
 
-    if (parentElement.type !== "$w.Page" && parentElement.type !== "$w.Header" && parentElement.type !== "$w.Footer" && (parentElement.type === "$w.ColumnStrip" || parentElement.type === "$w.Column" || parentElement.type === "$w.HtmlComponent" || parentElement.type ===  "$w.IFrame" || parentElement.type ===  "$w.Text" || parentElement.type ===  "$w.Image"))
+    if (parentElement.type !== "$w.Page" && parentElement.type !== "$w.Header" && parentElement.type !== "$w.Footer" && (parentElement.type === "$w.ColumnStrip" || parentElement.type === "$w.Column" || parentElement.type === "$w.HtmlComponent" || parentElement.type ===  "$w.IFrame" || parentElement.type ===  "$w.Text" || parentElement.type ===  "$w.Image" || parentElement.type ===  "$w.StylableButton"))
 	{
 		elementHidden = hideShowElement(parentElement);
 	}
@@ -151,7 +172,7 @@ function showHideElements(level, parentElement)
 
             consoleLog("Child Element: level " + level + " element - " + childElement.type + " : " + childElement.id);
 
-            if (childElement.type === "$w.HtmlComponent" || childElement.type ===  "$w.Text" || childElement.type ===  "$w.Image" || childElement.type ===  "$w.ColumnStrip" || childElement.type ===  "$w.Column")
+            if (childElement.type === "$w.HtmlComponent" || childElement.type ===  "$w.Text" || childElement.type ===  "$w.Image" || childElement.type ===  "$w.ColumnStrip" || childElement.type ===  "$w.Column" || childElement.type ===  "$w.StylableButton")
 	        {
 		        hideShowElement(childElement);
 	        }
