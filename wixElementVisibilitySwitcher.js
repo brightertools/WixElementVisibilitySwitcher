@@ -27,7 +27,7 @@
 // id = html2DesktopContentTabletContent - Will be displayed for Desktop and Tablet views Only
 // id = strip3MobileContent - Will be displayed for Mobile views only
 // id = html2DesktopContentTabletContentNoCollapse - Will be displayed for Desktop and Tablet views Only and will not collapse the
-//                                                   are on mobile views.
+//                                                   area on mobile views.
 //
 //
 // Created by Brighter Tools Ltd - www.brightertools.com
